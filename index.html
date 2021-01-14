@@ -175,19 +175,8 @@
 
           const unixEpoch = pearlData.time.map((t, i) => ( moment(`${pearlData.date[i]} ${t}`).unix()));
 
-          // Dirty hack to insert null data in gaps to break line plot
-          const fixGaps = (arr) => {
-            const out = [];
-            for (let i = 0; i < unixEpoch.length - 1; i++) {
-              const x = unixEpoch[i];
-              out.push({x, y: arr[i]});
-              if (unixEpoch[i+1] - x > 1500) {
-                out.push({x, y: null});
-              }
-            }
-            out.push({x: unixEpoch[unixEpoch.length - 1], y: arr[unixEpoch.length - 1]});
-            return out;
-          }
+          // Append time
+          const appendTime = (arr) => (arr.map((p, i) => ({x: unixEpoch[i], y: p})));
 
           const ticksOptions = {
             autoSkipPadding: 100,
@@ -221,18 +210,20 @@
                 label: 'LPS35HW Sensor',
                 backgroundColor: colors.red,
                 borderColor: colors.red,
-                data: fixGaps(pearlData.lpsTempC),
+                data: appendTime(pearlData.lpsTempC),
                 fill: false,
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }, {
                 label: 'SHT-30 Sensor',
                 backgroundColor: colors.cerulean,
                 borderColor: colors.cerulean,
-                data: fixGaps(pearlData.shtTempC),
+                data: appendTime(pearlData.shtTempC),
                 fill: false,
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }],
             },
             options: {
@@ -266,10 +257,11 @@
                 label: 'SHT-30 Sensor',
                 backgroundColor: colors.mango,
                 borderColor: colors.mango,
-                data: fixGaps(pearlData.shtHumidPercent),
+                data: appendTime(pearlData.shtHumidPercent),
                 fill: false,
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }]
             },
             options: {
@@ -303,10 +295,11 @@
                 label: 'SEN0170 Sensor',
                 backgroundColor: colors.green,
                 borderColor: colors.green,
-                data: fixGaps(pearlData.windSpeedMS),
+                data: appendTime(pearlData.windSpeedMS),
                 fill: false,
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }]
             },
             options: {
@@ -341,9 +334,10 @@
                 fill: false,
                 backgroundColor: colors.royal,
                 borderColor: colors.royal,
-                data: fixGaps(pearlData.ds18TempC),
+                data: appendTime(pearlData.ds18TempC),
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }],
             },
             options: {
@@ -378,9 +372,10 @@
                 fill: false,
                 backgroundColor: colors.purple,
                 borderColor: colors.purple,
-                data: fixGaps(pearlData.lpsPressHpa),
+                data: appendTime(pearlData.lpsPressHpa),
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }],
             },
             options: {
@@ -415,9 +410,10 @@
                 fill: false,
                 backgroundColor: colors.gray,
                 borderColor: colors.gray,
-                data: fixGaps(pearlData.lux),
+                data: appendTime(pearlData.lux),
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }],
             },
             options: {
@@ -451,18 +447,20 @@
                 label: 'HTU21D-F Sensor',
                 backgroundColor: colors.red,
                 borderColor: colors.red,
-                data: fixGaps(pearlData.htuTempC),
+                data: appendTime(pearlData.htuTempC),
                 fill: false,
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }, {
                 label: 'BMP280 Sensor',
                 fill: false,
                 backgroundColor: colors.cerulean,
                 borderColor: colors.cerulean,
-                data: fixGaps(pearlData.bmpTempC),
+                data: appendTime(pearlData.bmpTempC),
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }],
             },
             options: {
@@ -497,9 +495,10 @@
                 fill: false,
                 backgroundColor: colors.orange,
                 borderColor: colors.orange,
-                data: fixGaps(pearlData.htuHumidPercent),
+                data: appendTime(pearlData.htuHumidPercent),
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }],
             },
             options: {
@@ -534,9 +533,10 @@
                 fill: false,
                 backgroundColor: colors.blue,
                 borderColor: colors.blue,
-                data: fixGaps(pearlData.bmpPressPa),
+                data: appendTime(pearlData.bmpPressPa),
                 pointRadius: 0,
                 lineTension: 0.1,
+                borderJoinStyle: "round",
               }],
             },
             options: {
@@ -585,6 +585,9 @@
           Chart.Legend._element.prototype.afterFit = function() {
             this.height = this.height + 5;
           };
+
+          // Span gaps
+          Chart.defaults.controllers.line.spanGaps = 1500;
 
           const airTempEl = document.getElementById('air-temperature');
           window.airTemperatureLine = new Chart(airTempEl.getContext('2d'), airTemperatureConfig);

@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Line Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0-beta.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.1.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <style>
       html {
@@ -570,7 +570,7 @@
           Chart.defaults.plugins.tooltip.mode = 'index';
           Chart.defaults.plugins.tooltip.intersect = false;
           Chart.defaults.plugins.tooltip.callbacks.title = function(tooltipItem) {
-            return moment(tooltipItem[0].dataPoint.x * 1000).format("DD-MMMM-YYYY h:mm A");
+            return moment(tooltipItem[0].raw.x * 1000).format("DD-MMMM-YYYY h:mm A");
           };
 
           // Reponsive chart with title
@@ -587,7 +587,6 @@
           };
 
           // Span gaps
-          Chart.defaults.controllers.line.spanGaps = 1500;
 
           const airTempEl = document.getElementById('air-temperature');
           window.airTemperatureLine = new Chart(airTempEl.getContext('2d'), airTemperatureConfig);

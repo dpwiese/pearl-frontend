@@ -587,6 +587,7 @@
           };
 
           // Span gaps
+          Chart.defaults.datasets.line.spanGaps = 1500;
 
           const airTempEl = document.getElementById('air-temperature');
           window.airTemperatureLine = new Chart(airTempEl.getContext('2d'), airTemperatureConfig);
